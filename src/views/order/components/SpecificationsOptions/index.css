@@ -1,0 +1,24 @@
+.specifications-options {
+}
+
+.specifications-options__item {
+  width: 100%;
+}
+
+.specifications-options__title {
+  text-align: left;
+  font-size: 13px;
+}
+
+.specifications-options__container {
+  margin-bottom: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+
+.specifications-options__container .tag {
+  margin-right: 8px;
+  margin-top: 8px;
+  font-size: 12px;
+}

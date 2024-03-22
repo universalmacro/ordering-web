@@ -1,0 +1,23 @@
+.select-tables-modal {}
+
+.select-tables-modal__item {
+    width: 100%;
+}
+
+.select-tables-modal__title {
+    text-align: left;
+    font-size: 13px;
+}
+
+.select-tables-modal__container {
+    margin-bottom: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+}
+
+.select-tables-modal__container .tag {
+    margin-right: 8px;
+    margin-top: 8px;
+    font-size: 12px;
+}

@@ -1,0 +1,16 @@
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-height);
+  padding: 0 20px;
+  font-weight: 500;
+}
+
+.page-header__left {
+  width: 20px;
+}
+
+.page-header__left-back {
+  width: 20px;
+}

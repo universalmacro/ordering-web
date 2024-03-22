@@ -1,0 +1,105 @@
+.order {
+  height: 100%;
+  position: relative;
+}
+
+.order_top {
+  /* height: 100%; */
+  height: calc(100% - var(--order-botton-btn-height) - 80px);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+}
+
+.order_top-img {
+  padding: var(--order-padding);
+}
+
+.order_top-img .img {
+  width: 100%;
+  height: auto;
+}
+
+.order_top-menu {
+  /* padding: 0 var(--order-padding); */
+  flex: 1;
+  overflow-y: scroll;
+}
+
+.order_bottom {
+  position: fixed;
+  bottom: 0;
+  padding: 15px;
+  width: calc(100% - 30px);
+  background: #ffffff;
+  box-shadow: 0px -6px 20px 0px rgba(0, 0, 0, 0.1);
+}
+
+.specifications-container-remark {
+  margin-top: 15px;
+  width: 100%;
+}
+
+.specifications-container-remark .remark-title {
+  font-size: 13px;
+  font-weight: 400;
+  color: #181818;
+  text-align: left;
+}
+.specifications-container-remark .remark-input {
+  width: 100%;
+  margin-top: 8px;
+}
+.specifications-container-remark .remark-input > textarea {
+  width: 100%;
+  border: 0px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  outline: none;
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+.specifications-container-bottom {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.specifications-price {
+  font-size: 16px;
+  font-weight: 500;
+  height: 20px;
+  line-height: 20px;
+}
+
+.specifications-price > span {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ff4833;
+  height: 20px;
+  line-height: 20px;
+  margin-left: 15px;
+}
+
+.specifications-submit-btn {
+  width: 116px;
+  height: 34px;
+  line-height: 34px;
+  border-radius: 25px;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.specifications-submit-btn-usable {
+  background: linear-gradient(135deg, #e9c286 0%, #b18449 100%);
+  color: #ffffff;
+}
+
+.specifications-submit-btn-disable {
+  background: linear-gradient(135deg, #f4f4f4 0%, #bbbbbb 100%);
+  color: #8b8b8b;
+}

@@ -1,0 +1,167 @@
+.tables {
+    background: url('../../assets/png/home-bg.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}
+
+.tables__logo {
+    position: absolute;
+    width: 57px;
+    height: 39px;
+    top: 26px;
+    right: 26px;
+}
+
+.tables__order-btn-wpapper {
+    position: absolute;
+    width: 246px;
+    height: 54px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background-clip: padding-box, border-box;
+    background-origin: padding-box, border-box;
+    background-image: linear-gradient(135deg, rgba(233, 194, 134, 1), rgba(177, 132, 73, 1));
+    bottom: 15%;
+    margin-left: 1px;
+}
+
+.tables__order-btn {
+    margin-top: 1px;
+    margin-left: 1px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 6px;
+    bottom: 15%;
+    width: 244px;
+    height: 52px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tables__order-btn .btn-img {
+    height: 24px;
+    width: 24px;
+    margin-right: 6px;
+}
+
+.tables__order-btn .btn-text {
+    font-size: 20px;
+    font-weight: 600;
+    color: #b18449;
+    line-height: 28px;
+}
+
+
+/* table-modal */
+.select-tables {
+    top: 0;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 9999;
+}
+
+.select-tables__mask {
+    background: rgba(0, 0, 0, 0.4);
+    height: 100%;
+    width: 100%;
+}
+
+.select-tables__content {
+    padding: 0 15px 15px 15px;
+    margin: 0 15px;
+    background-color: #ffffffde;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: calc(100% - 60px);
+    border-radius: 16px;
+}
+
+.select-tables__content-header {
+    height: 47px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.select-tables__content-header-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #181818;
+    white-space: nowrap;
+    /* 禁止换行 */
+    overflow: hidden;
+    /* 隐藏溢出部分 */
+    text-overflow: ellipsis;
+    /* 使用省略号表示溢出的文本 */
+}
+
+.select-tables__content-header-cancel .cancel-img {
+    width: 13px;
+    height: 13px;
+}
+
+.select-tables__content-body {
+    flex: 1;
+    overflow: scroll;
+}
+
+.select-tables__content-body::-webkit-scrollbar {
+    display: none;
+    /* Chrome Safari */
+}
+
+.select-tables-submit-btn {
+    width: 116px;
+    height: 34px;
+    line-height: 34px;
+    border-radius: 25px;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.select-tables-submit-btn-usable {
+    background: linear-gradient(135deg, #e9c286 0%, #b18449 100%);
+    color: #ffffff;
+}
+
+.select-tables-submit-btn-disable {
+    background: linear-gradient(135deg, #f4f4f4 0%, #bbbbbb 100%);
+    color: #8b8b8b;
+}
+
+
+
+body {font-family: Arial, Helvetica, sans-serif;}
+
+/* The Modal (background) */
+.modal {
+  display: block; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}

@@ -1,0 +1,17 @@
+.tag {
+    padding: 0 15px;
+    height: 28px;
+    background: rgba(177, 132, 73, 0.04);
+    border-radius: 4px;
+
+    line-height: 28px;
+}
+
+.tag__selected {
+    border: 1px solid #b18449;
+    color: #b18449;
+}
+
+.tag__normal {
+    border: 1px solid #d8d8d8;
+}
