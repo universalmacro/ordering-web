@@ -1,28 +1,27 @@
 import "./index.css";
-import { Order } from "../../index";
 import { useEffect, useMemo, useState } from "react";
 import React from "react";
 import FoodCard from "../FoodCard";
-import { Item } from "@dparty/restaurant-ts-sdk";
 import { getAmount } from "../../../../utils";
+import { Food } from "@universalmacro/merchant-ts-sdk";
 
 interface IProps {
-  pushCart: (item: Item, selectedOptions: Map<string, string>) => void;
-  items: Item[];
-  orders: Order[];
-  removeCart: (item: Item, selectedOptions: Map<string, string>) => void;
-  onSelect: (item: Item) => void;
+  pushCart: (item: Food, selectedOptions: Map<string, string>) => void;
+  items: Food[];
+  orders: any[];
+  removeCart: (item: Food, selectedOptions: Map<string, string>) => void;
+  onSelect: (item: Food) => void;
 }
 
 const Menu: React.FC<IProps> = ({ removeCart, onSelect, items, orders, pushCart }) => {
   const getItemsByTag = (tag: string) => {
-    return items.filter((item) => item.tags.filter((t) => t === tag).length !== 0);
+    return items.filter((item) => item.categories.filter((t) => t === tag).length !== 0);
   };
   const tags = useMemo(() => {
     const tags = new Set<string>();
     items
       .reduce((tags, item) => {
-        return [...tags, ...item.tags];
+        return [...tags, ...item.categories];
       }, new Array<string>())
       .forEach((tag) => tags.add(tag));
     return Array.from(tags);

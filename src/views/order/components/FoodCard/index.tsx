@@ -2,9 +2,9 @@ import React, { useMemo } from "react";
 import reducePngUrl from "../../../../assets/png/reduce.png";
 import addPngUrl from "../../../../assets/png/add.png";
 import "./index.css";
-import { Item } from "@dparty/restaurant-ts-sdk";
-import { Pair } from "../..";
+import { Spec } from "../..";
 import { PairToMap, getPricing } from "../../../../utils";
+import { Food } from "@universalmacro/merchant-ts-sdk";
 
 export enum FoodCardActionType {
   SPECIFICATIONS = "specifications",
@@ -13,12 +13,12 @@ export enum FoodCardActionType {
 
 interface IProps {
   amount?: number;
-  item: Item;
+  item: Food;
   actionType?: string;
-  pushCart: (item: Item, selectedOptions: Map<string, string>) => void;
-  removeCart: (item: Item, selectedOptions: Map<string, string>) => void;
-  onSelect: (item: Item) => void;
-  options?: Pair[];
+  pushCart: (item: Food, selectedOptions: Map<string, string>) => void;
+  removeCart: (item: Food, selectedOptions: Map<string, string>) => void;
+  onSelect: (item: Food) => void;
+  options?: Spec[];
   editable?: boolean;
 }
 
@@ -78,18 +78,18 @@ const FoodCard: React.FC<IProps> = ({
     );
   };
   const pricing = useMemo(() => {
-    return getPricing({ item: item, options: options });
+    return getPricing({ food: item, spec: options });
   }, [options]);
   const optionsString = useMemo(() => {
-    return options.map((option) => `${option.left}:${option.right}`).join(",");
+    return options.map((option) => `${option.attribute}:${option.optioned}`).join(",");
   }, [options]);
   return (
     <div className="food-card" onClick={() => onSelect(item)}>
       <div className="food-card__img">
-        {item.images.length !== 0 ? (
+        {item.image !== "" ? (
           <img
             className="food-img"
-            src={`${item.images[0]}?imageView2/1/w/150/h/format/webp`}
+            src={`${item.image}?imageView2/1/w/150/h/format/webp`}
             alt="品項圖片"
           />
         ) : (
