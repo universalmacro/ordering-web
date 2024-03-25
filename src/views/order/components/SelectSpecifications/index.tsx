@@ -3,22 +3,23 @@ import cancelPngUrl from "../../../../assets/png/cancel.png";
 import { useEffect, useMemo, useState } from "react";
 import SpecificationsOptions from "../SpecificationsOptions";
 import { getAttributePricing } from "../../../../utils";
-import { Attribute, Item, Option } from "@dparty/restaurant-ts-sdk";
+// import { Attribute, Item, Option } from "@dparty/restaurant-ts-sdk";
+import { Food, FoodAttribute, FoodAttributesOption } from "@universalmacro/merchant-ts-sdk";
 
 interface IProps {
-  item?: Item;
+  item?: Food;
   onCancel: () => void;
-  pushCart: (item: Item, selectedOptions: Map<string, string>) => void;
+  pushCart: (item: Food, selectedOptions: Map<string, string>) => void;
 }
 
 const SelectSpecifications: React.FC<IProps> = ({ item, onCancel, pushCart }) => {
   const attributes = useMemo(() => {
-    if (!item) return [] as Attribute[];
+    if (!item) return [] as FoodAttribute[];
     return item.attributes.map((att) => {
       return {
         label: att.label,
         options: att.options,
-      } as Attribute;
+      } as FoodAttribute;
     });
   }, [item]);
   const [selectedOptions, setSelectedOptions] = useState<Map<string, string>>(
@@ -37,9 +38,9 @@ const SelectSpecifications: React.FC<IProps> = ({ item, onCancel, pushCart }) =>
   }, [item, selectedOptions]);
   const total = useMemo(() => {
     if (!item) return 0;
-    return item.pricing + extraTotal;
+    return item.price + extraTotal;
   }, [item, extraTotal]);
-  const onSelectOption = (a: Attribute, o: Option) => {
+  const onSelectOption = (a: FoodAttribute, o: FoodAttributesOption) => {
     const selected = selectedOptions.get(a.label);
     if (selected === o.label) {
       selectedOptions.delete(a.label);

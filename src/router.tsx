@@ -1,8 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import App from "./App";
-import { restaurantApi } from "./api/api";
-import { ItemStatus } from "@dparty/restaurant-ts-sdk";
+import { restaurantApi, getSpace, getTables, getFoods } from "./api/api";
+import { Food, FoodStatus } from "@universalmacro/merchant-ts-sdk";
 
 export function lazyWithRetry(componentImport: any) {
   return lazy(async () => {
@@ -58,34 +58,45 @@ const router = createBrowserRouter([
             <Order />
           </Suspense>
         ),
-        loader: ({ params }) => {
-          return new Promise((resolve, reject) => {
-            const search = window.location.search;
-            const query = new URLSearchParams(search);
-            const tableId = query.get("tableId") || (params.tableId as string);
-            const restaurantId = query.get("restaurantId") || (params.restaurantId as string);
-            const label = query.get("label");
-            // 如果獲取不到id，直接跳轉，防止後面 Promise 報錯
-            if (!tableId && !restaurantId) {
-              window.location.href = "/tables";
-            }
-            restaurantApi.getRestaurant({ id: restaurantId }).then((restaurant) => {
+        loader: async ({ params }) => {
+          const search = window.location.search;
+          const query = new URLSearchParams(search);
+          const tableId = query.get("tableId") || (params.tableId as string);
+          const restaurantId = query.get("restaurantId") || (params.restaurantId as string);
+          const label = query.get("label");
+
+          try {
+            // 獲取空間信息
+            const space = await getSpace(restaurantId);
+            // 獲取 tables
+            const tables = await getTables(restaurantId);
+            // 獲取 items
+            const foods = await getFoods(restaurantId);
+
+            return new Promise((resolve, reject) => {
+              // 如果獲取不到id，直接跳轉，防止後面 Promise 報錯
+              if (!tableId && !restaurantId) {
+                window.location.href = "/tables";
+              }
+
               const table =
                 label === null
-                  ? restaurant.tables.find((table) => table.id === tableId)
-                  : restaurant.tables.find((table) => table.label === label);
-              const items = restaurant.items;
+                  ? tables.find((table: any) => table.id === tableId)
+                  : tables.find((table: any) => table.label === label);
+              const items = foods;
               if (table) {
                 resolve({
                   table: table,
-                  items: items.filter((i) => i.status === ItemStatus.Actived),
-                  restaurant: restaurant,
+                  items: items.filter((i: Food) => i.status === FoodStatus.Available),
+                  restaurant: space,
                 });
               } else {
                 window.location.href = `/tables?restaurantId=${restaurantId}`;
               }
             });
-          });
+          } catch (e) {
+            console.log(e);
+          }
         },
       },
       {

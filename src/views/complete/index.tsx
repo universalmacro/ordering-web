@@ -17,13 +17,13 @@ const Complete: React.FC = () => {
       </div> */}
       <img className="complete__img" src={clockPngUrl} alt="请等待取餐" />
       <div className="complete__text">下单成功～ </div>
-      <div className="complete__textNum">取餐號：{location.state.bill.pickUpCode}</div>
+      <div className="complete__textNum">取餐號：{location.state.bill.code}</div>
       <div className="complete__detail">
         {cartOrders.map((cartOrder: any, index: any) => {
           return (
             <FoodCard
               editable={false}
-              options={cartOrder.order.options}
+              options={cartOrder.order.spec}
               amount={cartOrder.amount}
               removeCart={
                 () => {}
@@ -31,7 +31,7 @@ const Complete: React.FC = () => {
               }
               pushCart={() => {}}
               onSelect={(item) => {}}
-              item={cartOrder.order.item}
+              item={cartOrder.order.food}
               actionType="cart"
               key={index}
             />

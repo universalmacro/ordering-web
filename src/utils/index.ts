@@ -1,5 +1,5 @@
-import { Attribute } from "@dparty/restaurant-ts-sdk";
-import { CartOrder, Order, Pair } from "../views/order";
+import { FoodAttributesOption, FoodAttribute, FoodSpec } from "@universalmacro/merchant-ts-sdk";
+import { CartOrder, Spec } from "../views/order";
 
 //检查object的每个属性是否为空。只要有一个属性为空就返回true
 export function isEmptyObject(object: Record<string, string> | undefined | null): boolean {
@@ -23,45 +23,46 @@ export function isEmptyObject(object: Record<string, string> | undefined | null)
   }
   return flag;
 }
-export function getAttributePricing(attribute: Attribute, label: string) {
+export function getAttributePricing(attribute: FoodAttribute, label: string) {
   return attribute.options
     .filter((option) => option.label === label)
-    .reduce((total, current) => total + current.extra, 0);
+    .reduce((total, current) => total + (current.extra ?? 0), 0);
 }
 
-export function getAttribute(attributes: Attribute[], label: string) {
+export function getAttribute(attributes: FoodAttributesOption[], label: string) {
   return attributes.filter((attribute) => attribute.label === label)[0];
 }
 
-export function getLabel(pairs: Pair[], label: string) {
-  return pairs.filter((pair) => pair.left === label);
+export function getLabel(pairs: Spec[], label: string) {
+  return pairs.filter((pair) => pair.attribute === label);
 }
 
-export function PairToMap(pairs: Pair[]) {
+export function PairToMap(pairs: Spec[] | undefined) {
   const m = new Map<string, string>();
-  pairs.forEach((pair) => m.set(pair.left, pair.right));
+  pairs?.forEach((pair) => m.set(pair.attribute, pair.optioned));
   return m;
 }
 
-export function getPricing(order: Order) {
-  const m = PairToMap(order.options);
-  const extra = order.item.attributes.reduce(
-    (total, attribute) => total + getAttributePricing(attribute, m.get(attribute.label)!),
+export function getPricing(order: FoodSpec) {
+  const m = PairToMap(order.spec);
+
+  const extra = order.food?.attributes?.reduce(
+    (total: any, attribute: any) => total + getAttributePricing(attribute, m.get(attribute.label)!),
     0
   );
-  return order.item.pricing + extra;
+  return order.food?.price + extra;
 }
 
 export function MapToPair(m: Map<string, string>) {
-  const pairs: Pair[] = [];
+  const pairs: Spec[] = [];
   m.forEach((v, k) => {
-    pairs.push({ left: k, right: v });
+    pairs.push({ attribute: k, optioned: v });
   });
   return pairs;
 }
 
-export function getAmount(orders: Order[], id: string) {
-  return orders.filter((order) => order.item.id === id).length;
+export function getAmount(orders: FoodSpec[], id: string) {
+  return orders.filter((order) => order.food.id === id).length;
 }
 
 export function MapEqual(m: Map<string, string>, m2: Map<string, string>) {
@@ -77,18 +78,18 @@ export function MapEqual(m: Map<string, string>, m2: Map<string, string>) {
   return equal;
 }
 
-export function OptionEqual(m: Pair[], m2: Pair[]) {
+export function OptionEqual(m: Spec[] | undefined, m2: Spec[] | undefined) {
   return MapEqual(PairToMap(m), PairToMap(m2));
 }
 
-export function getCart(orders: Order[], cartOrders: CartOrder[] = []): CartOrder[] {
+export function getCart(orders: FoodSpec[], cartOrders: CartOrder[] = []): CartOrder[] {
   if (orders.length === 0) return cartOrders;
   const [order] = orders;
   const amount = orders.filter(
-    (o) => o.item.id === order.item.id && OptionEqual(o.options, order.options)
+    (o) => o.food.id === order.food.id && OptionEqual(o.spec, order.spec)
   ).length;
   const tail = orders.filter(
-    (o) => o.item.id !== order.item.id || !OptionEqual(o.options, order.options)
+    (o) => o.food.id !== order.food.id || !OptionEqual(o.spec, order.spec)
   );
   const newCartOrders = [
     {

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "./index.css";
 import Tag from "../../../../components/Tag";
-import { Attribute, Option } from "@dparty/restaurant-ts-sdk";
+import { FoodAttribute, FoodAttributesOption } from "@universalmacro/merchant-ts-sdk";
 
 interface IProps {
-  attributes: Attribute[];
+  attributes: FoodAttribute[];
   selectedOptions: Map<string, string>;
-  onSelectOption: (attribute: Attribute, option: Option) => void;
+  onSelectOption: (attribute: FoodAttribute, option: FoodAttributesOption) => void;
 }
 
 const SpecificationsOptions: React.FC<IProps> = ({
@@ -14,7 +14,7 @@ const SpecificationsOptions: React.FC<IProps> = ({
   selectedOptions,
   onSelectOption,
 }) => {
-  const checkSelected = (label: string, option: Option) => {
+  const checkSelected = (label: string, option: FoodAttributesOption) => {
     return selectedOptions.get(label) === option.label;
   };
   return (
@@ -25,10 +25,10 @@ const SpecificationsOptions: React.FC<IProps> = ({
           <div className="specifications-options__container">
             {attribute.options.map((option, index) => (
               <Tag
-                extra={option.extra}
+                extra={option.extra ?? 0}
                 key={index}
                 label={option.label}
-                value={option.extra}
+                value={option.extra ?? 0}
                 onClick={() => onSelectOption(attribute, option)}
                 selected={checkSelected(attribute.label, option)}
               />

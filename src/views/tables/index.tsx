@@ -5,11 +5,18 @@ import { restaurantApi } from "../../api/api";
 import { Table } from "@dparty/restaurant-ts-sdk";
 import SelectTableNum from "./SelectTableNum";
 import QRCode from "react-qr-code";
+import { getTables } from "../../api/api";
+
 interface ISelectTableModalProps {
   restaurantId: string;
   tableList: Table[] | null;
   title?: string;
 }
+
+const paginationConfig = {
+  pageSize: 10,
+  page: 0,
+};
 
 const orderWebDomain = "https://ordering-uat.sum-foods.com";
 
@@ -79,13 +86,14 @@ const TablesPage = () => {
   // 從 url 中獲取餐廳 id
   const search = window.location.search;
   const query = new URLSearchParams(search);
-  const restaurantId = query.get("restaurantId") || "";
+  const restaurantId = query.get("restaurantId") || ""; // newAPI test: 1755522580829175808
 
   const getTableList = async (restaurantId: string) => {
     try {
-      const res = await restaurantApi.getRestaurant({ id: restaurantId });
+      // const res = await restaurantApi.getRestaurant({ id: restaurantId });
+      const res = await getTables(restaurantId);
       if (res) {
-        setTableList(res.tables);
+        setTableList(res);
       }
     } catch (error) {
       console.log(error);

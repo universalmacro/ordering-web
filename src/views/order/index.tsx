@@ -7,21 +7,18 @@ import Menu from "./components/Menu";
 import SelectSpecifications from "./components/SelectSpecifications";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import Message from "../../components/Message";
-import { restaurantApi, billApi } from "../../api/api";
-import { Item, Restaurant, Table } from "@dparty/restaurant-ts-sdk";
+import { restaurantApi, billApi, createOrder } from "../../api/api";
+// import { Item, Restaurant, Table } from "@dparty/restaurant-ts-sdk";
 import { MapEqual, MapToPair, PairToMap, getCart, getPricing } from "../../utils";
 import FoodCard from "./components/FoodCard";
 import PageHeader from "../../components/PageHeder";
-import { createBill } from "../../api/api";
+// import { createBill } from "../../api/api";
 import Notification from "../../components/Notification";
+import { Food, FoodSpec, Space, Table } from "@universalmacro/merchant-ts-sdk";
 
-export interface Pair {
-  left: string;
-  right: string;
-}
-export interface Order {
-  item: Item;
-  options: Pair[];
+export interface Spec {
+  attribute: string;
+  optioned: string;
 }
 
 export interface FoodProps {
@@ -35,7 +32,7 @@ export interface FoodProps {
 }
 
 export interface CartOrder {
-  order: Order;
+  order: FoodSpec;
   amount: number;
 }
 
@@ -43,12 +40,12 @@ const OrderPage = () => {
   const navigate = useNavigate();
   const { table, items, restaurant } = useLoaderData() as {
     table: Table;
-    items: Item[];
-    restaurant: Restaurant;
+    items: Food[];
+    restaurant: Space;
   };
   const [cartVisiable, setCartVisiable] = useState<boolean>(false);
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [selectingSpecificationsItem, setSelectingSpecificationsItem] = useState<Item>();
+  const [orders, setOrders] = useState<FoodSpec[]>([]);
+  const [selectingSpecificationsItem, setSelectingSpecificationsItem] = useState<Food>();
 
   const [showMessage, setShowMessage] = useState(false);
   const cartCount = useMemo(() => {
@@ -58,14 +55,15 @@ const OrderPage = () => {
     return orders.reduce((total, order) => total + getPricing(order), 0);
   }, [orders]);
 
-  const pushCart = (item: Item, selectedOptions: Map<string, string>) => {
+  const pushCart = (item: Food, selectedOptions: Map<string, string>) => {
     setSelectingSpecificationsItem(undefined);
-    setOrders([...orders, { item: item, options: MapToPair(selectedOptions) }]);
+    setOrders([...orders, { food: item, spec: MapToPair(selectedOptions) }]);
   };
-  const removeCart = (item: Item, options: Map<string, string>) => {
+  const removeCart = (item: Food, options: Map<string, string>) => {
+    console.log(item, options);
     let index = -1;
     orders.forEach((order, i) => {
-      if (order.item.id === item.id && MapEqual(PairToMap(order.options), options)) {
+      if (order.food.id === item.id && MapEqual(PairToMap(order.spec), options)) {
         index = i;
       }
     });
@@ -83,57 +81,20 @@ const OrderPage = () => {
     }
     setDisable(true);
     const sp = orders.map((order) => ({
-      itemId: order.item.id,
-      options: order.options,
+      food: order.food,
+      spec: order.spec,
     }));
 
     try {
-      const res = await createBill(table.id, { specifications: sp });
-      // console.log(res);
+      const res = await createOrder(restaurant.id, { tableLabel: table.label, foods: orders });
 
-      // const res = await billApi.createBill({
-      //   id: table.id,
-      //   createBillRequest: {
-      //     specifications: sp,
-      //   },
-      // });
       if (res) {
-        console.log(res);
+        console.log(res, cartOrders);
         navigate("/complete", { state: { bill: res, cartOrders: cartOrders } });
       }
     } catch (e) {
       console.log(e);
     }
-    // const res = billApi
-    //   .createBill({
-    //     id: table.id,
-    //     createBillRequest: {
-    //       specifications: sp,
-    //     },
-    //   })
-    //   .then((res: any) => {
-    //     console.log(res);
-    //     navigate("/complete", { state: { bill: res, cartOrders: cartOrders } });
-    //   })
-    //   .catch((res: any) => {
-    //     console.log(res);
-    //     // navigate("/complete");
-    //   });
-
-    //   .createBill({
-    //     id: table.id,
-    //     createBillRequest: {
-    //       specifications: sp,
-    //     },
-    //   })
-    //   .then((res) => {
-    //     console.log(res);
-    //     // navigate("/complete");
-    //   })
-    //   .catch((res) => {
-    //     console.log(res);
-    //     // navigate("/complete");
-    //   });
   };
 
   return (
@@ -173,14 +134,12 @@ const OrderPage = () => {
           {cartOrders.map((cartOrder, index) => {
             return (
               <FoodCard
-                options={cartOrder.order.options}
+                options={cartOrder.order.spec}
                 amount={cartOrder.amount}
-                removeCart={() =>
-                  removeCart(cartOrder.order.item, PairToMap(cartOrder.order.options))
-                }
+                removeCart={() => removeCart(cartOrder.order.food, PairToMap(cartOrder.order.spec))}
                 pushCart={pushCart}
                 onSelect={(item) => {}}
-                item={cartOrder.order.item}
+                item={cartOrder.order.food}
                 actionType="cart"
                 key={index}
               />
